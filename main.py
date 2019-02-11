@@ -52,6 +52,8 @@ def main(_):
 
         image_name = os.path.join(image_dir, file + '.jpeg')
         image = cv2.imread(image_name)
+        new_image_name = os.path.join(out_image_dir, file + '.jpeg')
+        cv2.imwrite(new_image_name, image)
 
         annotation_name = os.path.join(xmls_path, file + '.xml')
         xml_tree = ET.parse(annotation_name)
@@ -71,28 +73,28 @@ def main(_):
 
             w = new_xml_tree.find('size/width')
             h = new_xml_tree.find('size/height')
-            w.text = str(float(w.text) * scale[0])
-            h.text = str(float(h.text) * scale[1])
+            w.text = str(int(float(w.text) * scale[0]))
+            h.text = str(int(float(h.text) * scale[1]))
 
             for object in new_xml_tree.findall('object'):
                 object_xmin = object.find('bndbox/xmin')
                 xmin = float(object_xmin.text)
-                xmin = xmin * scale[0]
+                xmin = int(xmin * scale[0])
                 object_xmin.text = str(xmin)
 
                 object_xmax = object.find('bndbox/xmax')
                 xmax = float(object_xmax.text)
-                xmax = xmax * scale[0]
+                xmax = int(xmax * scale[0])
                 object_xmax.text = str(xmax)
 
                 object_ymin = object.find('bndbox/ymin')
                 ymin = float(object_ymin.text)
-                ymin = ymin * scale[1]
+                ymin = int(ymin * scale[1])
                 object_ymin.text = str(ymin)
 
                 object_ymax = object.find('bndbox/ymax')
                 ymax = float(object_ymax.text)
-                ymax = ymax * scale[1]
+                ymax = int(ymax * scale[1])
                 object_ymax.text = str(ymax)
 
             new_annotation_name = os.path.join(out_xmls_path, file + suffix + '.xml')
